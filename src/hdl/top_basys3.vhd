@@ -101,14 +101,14 @@ architecture top_basys3_arch of top_basys3 is
     component elevator_controller_fsm is
         port ( 
              i_clk       : in  STD_LOGIC;
-             i_reset_fsm : in  STD_LOGIC; -- synchronous
+             i_reset     : in  STD_LOGIC; -- synchronous
              i_stop      : in  STD_LOGIC;
              i_up_down   : in  STD_LOGIC;
              o_floor     : out STD_LOGIC_VECTOR (3 downto 0));
     end component elevator_controller_fsm;
     
     component clock_divider is
-        generic (constant k_DIV : natural := 2);
+        generic (constant k_DIV : natural := 50000000);
         port ( 
              i_clk    : in std_logic;
              i_reset  : in std_logic;
@@ -120,8 +120,8 @@ architecture top_basys3_arch of top_basys3 is
         signal w_floor : std_logic_vector(3 downto 0) := (others => '0');
       
         -- 2 MHz clock
-        constant k_clk_period : time := 500 ns;
-        constant k_clock_divs : natural	:= 10;
+        constant k_clk_period : time := 0.5 sec;
+        constant k_clock_divs : natural := 50000000;
 	
 
   
@@ -143,7 +143,7 @@ begin
     elevator_controller_fsm_inst : elevator_controller_fsm 
     port map (
               i_clk       => w_clk,
-              i_reset_fsm => btnR or btnU,
+              i_reset     => btnR or btnU,
               i_stop      => sw(0),
               i_up_down   => sw(1),
               o_floor     => w_floor);
@@ -152,11 +152,14 @@ begin
 	
 	-- LED 15 gets the FSM slow clock signal. The rest are grounded.
 	   led(15) <= w_clk;
-	  
+	   led(14 downto 0) <= (others => '0');
 	-- leave unused switches UNCONNECTED. Ignore any warnings this causes.
-	
+
 	-- wire up active-low 7SD anodes (an) as required
 	-- Tie any unused anodes to power ('1') to keep them off
-	   an <= (0 => w_floor, others => '1');
-	
+       --an(2) <= '0';
+       --an(3 downto 0) <= (others => '1');
+       --an <= w_floor;
+       an <= (2 => '0', others => '1');
+  
 end top_basys3_arch;
