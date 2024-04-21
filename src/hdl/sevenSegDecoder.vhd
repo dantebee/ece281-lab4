@@ -53,8 +53,9 @@ use IEEE.NUMERIC_STD.ALL;
 
 
 entity sevenSegDecoder is
-    Port ( i_D : in STD_LOGIC_VECTOR (3 downto 0);
-           o_S : out STD_LOGIC_VECTOR (6 downto 0));
+    port ( 
+          i_D : in STD_LOGIC_VECTOR (3 downto 0);
+          o_S : out STD_LOGIC_VECTOR (6 downto 0));
 end sevenSegDecoder;
 
 architecture Behavioral of sevenSegDecoder is
